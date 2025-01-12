@@ -63,7 +63,7 @@ if np.sum(stat_nb)<55*7:
     b.text("il y a "+str(+55*7-np.sum(stat_nb))+" points qui manque ")
 if np.min(stat_nb)<25:
     b.text("le minimum est 25")
-if np.min(stat_nb)>80:
+if np.max(stat_nb)>80:
     b.text("le minimum est 80")
 
 
