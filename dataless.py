@@ -18,7 +18,7 @@ def dice():
         lance[2].text("=> "+str(rst[-1])+" ("+str(rst[-1]-int(addd))+")")
     lance[2].text("SOMME : "+str(np.sum(rst)))
 
-de=lance[0].text_input("dé")
+de=lance[0].text_input("dé",value="2d6+5")
 lance[1].button("lancer les dés",on_click=dice)
 
 #*--------------------------- fiche de perso
