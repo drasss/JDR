@@ -14,9 +14,9 @@ def dice():
     des=desp[0].strip(" ").split("d")
     addd=desp[1].strip(" ")
     for i in range(int(des[0])):
-        rst+=[random.randint(1,int(des[1]))+int(addd)]
-        lance[2].text("=> "+str(rst[-1])+" ("+str(rst[-1]-int(addd))+")")
-    lance[2].text("SOMME : "+str(np.sum(rst)))
+        rst+=[random.randint(1,int(des[1]))]
+        lance[2].text("=> "+str(rst[-1]))
+    lance[2].text("SOMME : "+str(np.sum(rst)+int(addd)))
 
 de=lance[0].text_input("dé",value="2d6+5")
 lance[1].button("lancer les dés",on_click=dice)
