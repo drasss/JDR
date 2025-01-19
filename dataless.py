@@ -20,7 +20,7 @@ def dice():
         rst+=[random.randint(1,int(des[1]))]
     lance.text("SOMME : "+str(np.sum(rst)+int(addd))+" "+str(rst))
 
-de=lance.text_input("dé",value="2d6+5")
+de=lance.text_input("dé",value="1d100")
 lance.button("lancer les dés",on_click=dice)
 
 #*--------------------------- fiche de perso
