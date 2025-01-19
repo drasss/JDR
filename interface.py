@@ -4,7 +4,7 @@ import random
 from io import StringIO
 
 st.set_page_config(layout="wide")
-c,b,d = st.tabs(["Fiche Personnage", "création fiche","résultats"])
+b,d = st.tabs(["Fiche Personnage","résultats"])
 
 #lancé de dés
 lance=st.sidebar
