@@ -4,10 +4,10 @@ import random
 from io import StringIO
 
 st.set_page_config(layout="wide")
-a,c,b,d = st.tabs(["dés","Fiche Personnage", "création fiche","résultats"])
+c,b,d = st.tabs(["Fiche Personnage", "création fiche","résultats"])
 
 #lancé de dés
-lance=a.columns(3)
+lance=st.sidebar
 def dice():
     rst=[]
 
@@ -18,11 +18,10 @@ def dice():
     addd=desp[1].strip(" ")
     for i in range(int(des[0])):
         rst+=[random.randint(1,int(des[1]))]
-        lance[2].text("=> "+str(rst[-1]))
-    lance[2].text("SOMME : "+str(np.sum(rst)+int(addd)))
+    lance.text("SOMME : "+str(np.sum(rst)+int(addd))+" "+str(rst))
 
-de=lance[0].text_input("dé",value="2d6+5")
-lance[1].button("lancer les dés",on_click=dice)
+de=lance.text_input("dé",value="2d6+5")
+lance.button("lancer les dés",on_click=dice)
 
 #*--------------------------- fiche de perso
 #*-------------- lecture du fichier
@@ -42,8 +41,8 @@ except :
     extracted=False
 values=data[:7]
 #--------------- XP
-LVL=st.sidebar.number_input("Niveau",1)
-XP=st.sidebar.number_input("XP",0)
+LVL=b.number_input("Niveau",1)
+XP=b.number_input("XP",0)
 
 #*-------------- 7 Stats capitaux
 
