@@ -4,7 +4,7 @@ import random
 from io import StringIO
 
 st.set_page_config(layout="wide")
-c,b,d = st.tabs(["Fiche Personnage", "création fiche","résultats"])
+b,d = st.tabs(["Fiche Personnage","résultats"])
 
 #lancé de dés
 lance=st.sidebar
@@ -43,7 +43,7 @@ try:
 except :
     data=[55]*7+[15,15,55,55,15,15]
     extracted=False
-    data_ext=["","",0,0,"","",""]
+    data_ext=["","","0##0","","",""]
     
 values=data[:7]
 

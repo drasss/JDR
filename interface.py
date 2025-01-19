@@ -43,7 +43,7 @@ try:
 except :
     data=[55]*7+[15,15,55,55,15,15]
     extracted=False
-    data_ext=["","",0,0,"","",""]
+    data_ext=["","","0##0","","",""]
     
 values=data[:7]
 
