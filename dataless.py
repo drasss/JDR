@@ -41,8 +41,8 @@ except :
     extracted=False
 values=data[:7]
 #--------------- XP
-LVL=b.number_input("Niveau",1)
-XP=b.number_input("XP",0)
+#LVL=b.number_input("Niveau",1)
+#XP=b.number_input("XP",0)
 
 #*-------------- 7 Stats capitaux
 
