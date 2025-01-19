@@ -32,17 +32,20 @@ try:
     stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
     data = stringio.read()
     #traiter le texte
-    data=data.split(",")
-    for i in range(len(data)):
-        data[i]=int(data[i])
+    data=data.split("\n#####\n")
+    data[0]=data[0].strip().split(",")
+    for i in range(len(data[0])):
+        data[0][i]=int(data[0][i].strip())
+    data_ext=data[1:]
+    data=data[0]
     extracted=True
+    
 except :
     data=[55]*7+[15,15,55,55,15,15]
     extracted=False
+    data_ext=["","",0,0,"","",""]
+    
 values=data[:7]
-#--------------- XP
-#LVL=b.number_input("Niveau",1)
-#XP=b.number_input("XP",0)
 
 #*-------------- 7 Stats capitaux
 
@@ -62,8 +65,8 @@ if extracted == False:
     prdt=int(prdt+int(prdt!=float(int(prdt))))
     esqt=(stat_nb[-2]+stat_nb[-3])/2
     esqt=int(esqt+int(esqt!=float(int(esqt))))
-    pvt=int(stat_nb[0]/10)+int(stat_nb[-1]/10)+5
-    pet=int(stat_nb[1]/10)+int(stat_nb[-3]/10)+5
+    pvt=int(stat_nb[0]/10)+int(stat_nb[-1]/10)+3
+    pet=int(stat_nb[1]/10)+int(stat_nb[-3]/10)+3
     pvmax=pvt
     pemax=pet
 else :
@@ -87,20 +90,30 @@ if np.max(stat_nb)>80:
     b.text("le minimum est 80")
     
 #*-------------- suite
+
 b_xp=b.expander("Infos")
 text_fiche=b_xp.columns([3,4,2,2])
-competences=text_fiche[0].text_area("Competences")
-Inventaire=text_fiche[1].text_area("Inventaire")
-PO=text_fiche[2].number_input("PO",0)
-PA=text_fiche[3].number_input("PA",0)
-Aptitudes=b_xp.text_area("Aptitudes")
-Sorts=b_xp.text_area("Sorts")
+competences=text_fiche[0].text_area("Competences",value=data_ext[0])
+Inventaire=text_fiche[1].text_area("Inventaire",value=data_ext[1])
+PO=text_fiche[2].number_input("PO",value=int(data_ext[2].split("##")[0]))
+PA=text_fiche[3].number_input("PA",value=int(data_ext[2].split("##")[1]))
+Aptitudes=b_xp.text_area("Aptitudes",value=data_ext[3])
+Sorts=b_xp.text_area("Sorts",value=data_ext[4])
+
+#--------------- Notes
+notes = b.text_area("notes",value=data_ext[5])
+
 
 #--------------- Compagnons
 
 
 #*-------------- recolte et téléchargement des données
 data_txt=str(stat_nb).strip("[]")+", "+str([pvnb,pvmaxnb,prdnb,esqnb,penb,pemaxnb]).strip("[]") 
-
+data_txt+="\n#####\n"+competences
+data_txt+="\n#####\n"+Inventaire
+data_txt+="\n#####\n"+str(PO)+"##"+str(PA)
+data_txt+="\n#####\n"+Aptitudes
+data_txt+="\n#####\n"+Sorts
+data_txt+="\n#####\n"+notes
 b.download_button("Download Data",data_txt,file_name="data.txt")
 
