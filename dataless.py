@@ -38,26 +38,41 @@ try:
         data[0][i]=int(data[0][i].strip())
     data_ext=data[1:]
     data=data[0]
+    XPst=data[1]
+    LVLst=data[0]
+    data=data[2:]
+    
     extracted=True
     
 except :
     data=[55]*7+[15,15,55,55,15,15]
+    XPst=0
+    LVLst=1
     extracted=False
-    data_ext=["","","0##0","","",""]
+    data_ext=["","","0##0","","","",""]
     
 values=data[:7]
+#- ------------- Name
+
+Name=b.text_input("Nom",value=data_ext[6],label_visibility="hidden")
+
+#--------------- XP
+b_xp=b.columns([2,1,1,1,2])
+LVL=b_xp[1].number_input("Niveau",LVLst)
+XP=b_xp[3].number_input("XP",XPst)
 
 #*-------------- 7 Stats capitaux
 
+statistiques=b.expander("Statistiques",True)
     
-stats=b.columns(7)
+stats=statistiques.columns(7)
 stat_nb=[]
 name_stats=["FOR","ESP","CHA","FIN","LUC","CEL","CON"]
 
 
 for i in range(7):
     stat_nb+=[stats[i].number_input(name_stats[i],value=values[i],key=str(i)+"stats")]
-PV,prd,esq,PE=b.columns(4)
+PV,prd,esq,PE=statistiques.columns(4)
 
 #*-------------- 4 stats secondaires
 if extracted == False:
@@ -91,14 +106,20 @@ if np.max(stat_nb)>80:
     
 #*-------------- suite
 
-b_xp=b.expander("Infos")
-text_fiche=b_xp.columns([3,4,2,2])
-competences=text_fiche[0].text_area("Competences",value=data_ext[0])
-Inventaire=text_fiche[1].text_area("Inventaire",value=data_ext[1])
+IetC=b.expander("Inventaire & Compétences")
+text_fiche=IetC.columns([3,4,2])
+competences=text_fiche[0].text_area("Competences",value=data_ext[0],height=300)
+Inventaire=text_fiche[1].text_area("Inventaire",value=data_ext[1],height=300)
 PO=text_fiche[2].number_input("PO",value=int(data_ext[2].split("##")[0]))
-PA=text_fiche[3].number_input("PA",value=int(data_ext[2].split("##")[1]))
-Aptitudes=b_xp.text_area("Aptitudes",value=data_ext[3])
-Sorts=b_xp.text_area("Sorts",value=data_ext[4])
+PA=text_fiche[2].number_input("PA",value=int(data_ext[2].split("##")[1]))
+
+apt=b.expander("Aptitudes")
+
+Aptitudes=apt.text_area("Aptitudes",value=data_ext[3],height=600)
+
+sor=b.expander("Sorts")
+
+Sorts=sor.text_area("Sorts",value=data_ext[4],height=500)
 
 #--------------- Notes
 notes = b.text_area("notes",value=data_ext[5])
@@ -108,12 +129,14 @@ notes = b.text_area("notes",value=data_ext[5])
 
 
 #*-------------- recolte et téléchargement des données
-data_txt=str(stat_nb).strip("[]")+", "+str([pvnb,pvmaxnb,prdnb,esqnb,penb,pemaxnb]).strip("[]") 
+data_txt=str(LVL)+", "+str(XP)+", "
+data_txt+=str(stat_nb).strip("[]")+", "+str([pvnb,pvmaxnb,prdnb,esqnb,penb,pemaxnb]).strip("[]") 
 data_txt+="\n#####\n"+competences
 data_txt+="\n#####\n"+Inventaire
 data_txt+="\n#####\n"+str(PO)+"##"+str(PA)
 data_txt+="\n#####\n"+Aptitudes
 data_txt+="\n#####\n"+Sorts
 data_txt+="\n#####\n"+notes
+data_txt+="\n#####\n"+Name
 b.download_button("Download Data",data_txt,file_name="data.txt")
 

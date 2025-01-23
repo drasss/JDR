@@ -1,12 +1,19 @@
-30, 80, 49, 74, 61, 61, 30, 12, 12, 46, 61, 20, 20
+2, 90, 30, 80, 51, 72, 61, 61, 30, 14, 14, 46, 61, 18, 18
+#####
+Sorcellerie (Glace) : +10%
+Sorcellerie (Vent) : +5%
+Connaissance (Arcane) : +5%
+Maitrise des armes (Chakram) : +5%
+Maitrise des armes (Hache) : +10%
+#####
+
+#####
+0##0
 #####
 
 #####
 
 #####
-2##80
-#####
 
 #####
-
-#####
+Felifaasth
