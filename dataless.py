@@ -4,7 +4,7 @@ import random
 from io import StringIO
 
 st.set_page_config(layout="wide")
-b,d = st.tabs(["Fiche Personnage","résultats"])
+b,d = st.tabs(["Fiche Personnage","Simulation"])
 
 #lancé de dés
 lance=st.sidebar
@@ -59,7 +59,7 @@ Name=b.text_input("Nom",value=data_ext[6],label_visibility="hidden")
 #--------------- XP
 b_xp=b.columns([2,1,1,1,2])
 LVL=b_xp[1].number_input("Niveau",LVLst)
-XP=b_xp[3].number_input("XP",XPst)
+XP=b_xp[3].number_input("XP",min_value=0,value=XPst)
 
 #*-------------- 7 Stats capitaux
 
@@ -139,4 +139,65 @@ data_txt+="\n#####\n"+Sorts
 data_txt+="\n#####\n"+notes
 data_txt+="\n#####\n"+Name
 b.download_button("Download Data",data_txt,file_name="data.txt")
+
+#---------------------------------- 
+#---------------------------------- SIMULATIONS
+#---------------------------------- 
+
+nb_coups=d.slider("nombre de coups",1,8)
+
+coups=[d.container() for i in range(nb_coups)]
+
+colcoups=[""]*nb_coups
+
+proba_coup=[""]*nb_coups
+bonus_coup=[""]*nb_coups
+dgt_coup=[""]*nb_coups
+
+for i in range(len(coups)):
+    colcoups[i]=coups[i].columns([1,1,4])
+    proba_coup[i]=colcoups[i][0].number_input("proba",0,100,55,key="proba"+str(i))
+    bonus_coup[i]=colcoups[i][1].number_input("bonus",-50,50,0,key="bonus"+str(i))
+    dgt_coup[i]=colcoups[i][2].text_input("dégats","1d6+2",key="dgt"+str(i))
+
+calcul_b=d.button("Calcul")
+
+simur=""
+
+if calcul_b:
+    dgt=0
+    for i in range(nb_coups):
+        desp=dgt_coup[i].split("+")
+        if len(desp)==1:
+            desp+=["0"]
+        des=desp[0].strip(" ").split("d")
+        addd=desp[1].strip(" ")
+        dgtde=int(des[0])*(int(des[1])+1)/2+int(addd)
+        dgt+=dgtde*(proba_coup[i]+bonus_coup[i]+5)/100
+    simur=str(dgt)
+
+    
+d.text(simur)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
