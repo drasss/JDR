@@ -4,7 +4,7 @@ import random
 from io import StringIO
 
 st.set_page_config(layout="wide")
-b,d = st.tabs(["Fiche Personnage","Simulation"])
+b,d,p = st.tabs(["Fiche Personnage","Simulation","Equilibrage"])
 
 #lancé de dés
 lance=st.sidebar
@@ -102,7 +102,7 @@ if np.sum(stat_nb)<55*7:
 if np.min(stat_nb)<25:
     b.text("le minimum est 25")
 if np.max(stat_nb)>80:
-    b.text("le minimum est 80")
+    b.text("le maximum est 80")
     
 #*-------------- suite
 
@@ -182,7 +182,32 @@ d.text(simur)
 
 
 
+#---------------------------------- 
+#---------------------------------- équilibrage du fun de la partie
+#---------------------------------- p
+p.text_area("déja rempli : ",value=competences,height=300)
+pc=p.columns(4)
 
+ptitles=["Scénario","Moments calmes","Environnements hostiles","Combat"]
+pexemples=["ESP | Connaissance (mythes et croyances)","ESP | Artisanat (apothicaire)","CEL | Subterfuge","ESP | Controle du feu"]
+#p.write(stat_nb)
+ptext=[]
+
+datap=[]
+for i in range(len(pc)):
+    pc[i].text(ptitles[i])
+    ptext+=[pc[i].text_area("Compétences",value=pexemples[i],height=400,key="textareap"+str(i))]
+
+    tempo=ptext[i].split("\n")
+    tempo=[tempo[j].split(" | ") for j in range(len(tempo))]
+    datap+=[tempo]
+#p.write(datap)
+
+score=[len(datap[0])+stat_nb[1]/100,len(datap[1])+0.8,len(datap[2])+stat_nb[4]/100,len(datap[3])-0.5+max(stat_nb)/100]
+st.text("tu t'amuseras + dans "+ptitles[np.argmax(score)])
+st.text("tu t'amuseras - dans "+ptitles[np.argmin(score)])
+st.text(" si un de ces scores est en dessous de 2, attention ! ")
+st.text(str([ptitles[i]+" : "+str(round(score[i],2)) for i in range(len(score))]))
 
 
 
