@@ -106,9 +106,27 @@ if np.max(stat_nb)>80:
     
 #*-------------- suite
 
+def calc_cpt(stat_nb,human=True):
+    cpt=LVL*2+int(human)*2+(stat_nb[2]//10+stat_nb[3]//10)//2
+    
+    return cpt
 IetC=b.expander("Inventaire & Compétences")
+is_human=IetC.checkbox("Personnage Humain",value=True)
 text_fiche=IetC.columns([3,4,2])
-competences=text_fiche[0].text_area("Competences",value=data_ext[0],height=300)
+
+calc_cpt_nb=calc_cpt(stat_nb,is_human)
+
+competences=text_fiche[0].text_area(str(calc_cpt_nb)+" Competences",value=data_ext[0],height=300)
+try:
+    competences_s=competences.split("\n")
+    for i in range(len(competences_s)):
+        competences_s[i]=competences_s[i].split(":")[-1].split("%")[0].strip(" +")
+        competences_s[i]=int(competences_s[i])
+    IetC.text("Total des compétences : "+str(np.sum(competences_s)//5))
+except:
+    pass
+
+
 Inventaire=text_fiche[1].text_area("Inventaire",value=data_ext[1],height=300)
 PO=text_fiche[2].number_input("PO",value=int(data_ext[2].split("##")[0]))
 PA=text_fiche[2].number_input("PA",value=int(data_ext[2].split("##")[1]))
@@ -204,10 +222,10 @@ for i in range(len(pc)):
 #p.write(datap)
 
 score=[len(datap[0])+stat_nb[1]/100,len(datap[1])+0.8,len(datap[2])+stat_nb[4]/100,len(datap[3])-0.5+max(stat_nb)/100]
-st.text("tu t'amuseras + dans "+ptitles[np.argmax(score)])
-st.text("tu t'amuseras - dans "+ptitles[np.argmin(score)])
-st.text(" si un de ces scores est en dessous de 2, attention ! ")
-st.text(str([ptitles[i]+" : "+str(round(score[i],2)) for i in range(len(score))]))
+p.text("tu t'amuseras + dans "+ptitles[np.argmax(score)])
+p.text("tu t'amuseras - dans "+ptitles[np.argmin(score)])
+p.text(" si un de ces scores est en dessous de 2, attention ! ")
+p.text(str([ptitles[i]+" : "+str(round(score[i],2)) for i in range(len(score))]))
 
 
 
