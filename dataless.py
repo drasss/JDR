@@ -116,14 +116,15 @@ text_fiche=IetC.columns([3,4,2])
 
 calc_cpt_nb=calc_cpt(stat_nb,is_human)
 
-competences=text_fiche[0].text_area(str(calc_cpt_nb)+" Competences",value=data_ext[0],height=300)
+competences=text_fiche[0].text_area("Competences",value=data_ext[0],height=300)
 try:
-    competences_s=competences.split("\n")
+    competences_s=competences.strip().split("\n")
     for i in range(len(competences_s)):
         competences_s[i]=competences_s[i].split(":")[-1].split("%")[0].strip(" +")
         competences_s[i]=int(competences_s[i])
-    IetC.text("Total des compétences : "+str(np.sum(competences_s)//5))
+    text_fiche[0].text("Compétences Disponibles : "+str(calc_cpt_nb-np.sum(competences_s)//5)+"/"+str(calc_cpt_nb))
 except:
+    text_fiche[0].text("Compétences Disponibles : "+str(calc_cpt_nb))
     pass
 
 
