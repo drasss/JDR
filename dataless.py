@@ -110,27 +110,67 @@ def calc_cpt(stat_nb,human=True):
     cpt=LVL*2+int(human)*2+(stat_nb[2]//10+stat_nb[3]//10)//2
     
     return cpt
-IetC=b.expander("Inventaire & Compétences")
-is_human=IetC.checkbox("Personnage Humain",value=True)
-text_fiche=IetC.columns([3,4,2])
 
+# ---------------------- Compétences et atout
+
+
+# ----- import 
+
+
+
+def update_ssst():
+    global tt
+
+    ok=True
+    cpt=0
+    i=0
+    while ok:
+        try:
+            cpt+=st.session_state["cpt n"+str(i)]//5-1  # le key d'un st.text_input permet de récuperer individuellement les resultats comme des variables plutot que de les stocker dans une liste comme je faisais
+            i+=1
+        except KeyError:
+            ok=False
+    st.session_state['counter']= cpt
+
+    
+
+if 'counter' not in st.session_state:
+    st.session_state['counter']=0
+
+Comp=b.expander("Compétences et Atouts",True)
+is_human=Comp.checkbox("Personnage Humain",value=True)
 calc_cpt_nb=calc_cpt(stat_nb,is_human)
 
-competences=text_fiche[0].text_area("Competences",value=data_ext[0],height=300)
-try:
-    competences_s=competences.strip().split("\n")
-    for i in range(len(competences_s)):
-        competences_s[i]=competences_s[i].split(":")[-1].split("%")[0].strip(" +")
-        competences_s[i]=int(competences_s[i])
-    text_fiche[0].text("Compétences Disponibles : "+str(calc_cpt_nb-np.sum(competences_s)//5)+"/"+str(calc_cpt_nb))
-except:
-    text_fiche[0].text("Compétences Disponibles : "+str(calc_cpt_nb))
-    pass
+comp_temp=[["",5]]*calc_cpt_nb
+if extracted:
+    comp_temp=data_ext[0].split("||")
+    comp_temp=[comp_temp[i].split(":") for i in range(len(comp_temp))]
+comp_c=Comp.columns([7,3])
+
+list_comp=[]
+comp_c[0].text("Compétences / atouts")
+comp_c[1].text("Niveau en %")
+for i in range(calc_cpt_nb-st.session_state['counter']):
+    list_comp+=[[comp_c[0].text_input(""+str(i+1),value=comp_temp[i][0],key="cpt t"+str(i)),
+    comp_c[1].number_input("%",label_visibility="hidden",value=int(comp_temp[i][1]),step=5,min_value=5,on_change=update_ssst,key="cpt n"+str(i))]]
 
 
-Inventaire=text_fiche[1].text_area("Inventaire",value=data_ext[1],height=300)
-PO=text_fiche[2].number_input("PO",value=int(data_ext[2].split("##")[0]))
-PA=text_fiche[2].number_input("PA",value=int(data_ext[2].split("##")[1]))
+competences="".join([list_comp[i][0]+" : "+str(list_comp[i][1])+"||" for i in range(len(list_comp))])
+
+# ---------------------- Inventaire
+
+invent=b.expander("Inventaire & Compétences")
+
+text_fiche=invent.columns([4,2])
+
+
+
+
+
+
+Inventaire=text_fiche[0].text_area("Inventaire",value=data_ext[1],height=300)
+PO=text_fiche[1].number_input("PO",value=int(data_ext[2].split("##")[0]))
+PA=text_fiche[1].number_input("PA",value=int(data_ext[2].split("##")[1]))
 
 apt=b.expander("Aptitudes")
 

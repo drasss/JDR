@@ -1,0 +1,1 @@
+streamlit run dataless_idea.py
