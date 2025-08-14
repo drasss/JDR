@@ -115,47 +115,60 @@ def calc_cpt(stat_nb,human=True):
 
 
 # ----- import 
+if 'atout' not in st.session_state:
+    st.session_state['atout']=False
 
+if 'nbatouts' not in st.session_state:
+    st.session_state['nbatouts']=0
 
+if 'nbatoutsslider' not in st.session_state:
+    st.session_state['nbatoutsslider']=0
 
 def update_ssst():
-    global tt
+    global tt,atout
 
     ok=True
     cpt=0
     i=0
+    atout=False
     while ok:
         try:
-            cpt+=st.session_state["cpt n"+str(i)]//5-1  # le key d'un st.text_input permet de récuperer individuellement les resultats comme des variables plutot que de les stocker dans une liste comme je faisais
+            temp_t=st.session_state["cpt n"+str(i)]//5-1
+            if temp_t>1:
+                atout=True
+            cpt+=temp_t # le key d'un st.text_input permet de récuperer individuellement les resultats comme des variables plutot que de les stocker dans une liste comme je faisais
             i+=1
         except KeyError:
             ok=False
+    st.session_state['atout']=atout
     st.session_state['counter']= cpt
+    st.session_state['nbatouts']=st.session_state['nbatoutsslider']*int(st.session_state['atout'])
 
-    
 
-if 'counter' not in st.session_state:
-    st.session_state['counter']=0
+
+
+
 
 Comp=b.expander("Compétences et Atouts",True)
 is_human=Comp.checkbox("Personnage Humain",value=True)
 calc_cpt_nb=calc_cpt(stat_nb,is_human)
 
-comp_temp=[["",5]]*calc_cpt_nb
-if extracted:
-    comp_temp=data_ext[0].split("||")
-    comp_temp=[comp_temp[i].split(":") for i in range(len(comp_temp))]
+
+
 comp_c=Comp.columns([7,3])
+
+if 'counter' not in st.session_state:
+    st.session_state['counter']=0
 
 list_comp=[]
 comp_c[0].text("Compétences / atouts")
 comp_c[1].text("Niveau en %")
-for i in range(calc_cpt_nb-st.session_state['counter']):
-    list_comp+=[[comp_c[0].text_input(""+str(i+1),value=comp_temp[i][0],key="cpt t"+str(i)),
-    comp_c[1].number_input("%",label_visibility="hidden",value=int(comp_temp[i][1]),step=5,min_value=5,on_change=update_ssst,key="cpt n"+str(i))]]
+for i in range(calc_cpt_nb-st.session_state['counter']-st.session_state['nbatouts']):
+    list_comp+=[[comp_c[0].text_input(""+str(i+1),value="",key="cpt t"+str(i)),
+    comp_c[1].number_input("%",label_visibility="hidden",value=5,step=5,min_value=5,max_value=30,on_change=update_ssst,key="cpt n"+str(i))]]
 
 
-competences="".join([list_comp[i][0]+" : "+str(list_comp[i][1])+"||" for i in range(len(list_comp))])
+competences="".join([list_comp[i][0]+" : "+str(list_comp[i][1])+"||" for i in range(len(list_comp))]).strip("||")
 
 # ---------------------- Inventaire
 
@@ -165,6 +178,24 @@ text_fiche=invent.columns([4,2])
 
 
 
+def nbatout_sl():
+    
+    ok=True
+    cpt=0
+    i=0
+    atout=False
+    while ok:
+        try:
+            temp_t=st.session_state["cpt n"+str(i)]//5-1
+            if temp_t>1:
+                atout=True
+            cpt+=temp_t # le key d'un st.text_input permet de récuperer individuellement les resultats comme des variables plutot que de les stocker dans une liste comme je faisais
+            i+=1
+        except KeyError:
+            ok=False
+    st.session_state['atout']=atout
+    st.session_state['counter']= cpt
+    st.session_state['nbatouts']=st.session_state['nbatoutsslider']*int(st.session_state['atout'])
 
 
 
@@ -172,10 +203,16 @@ Inventaire=text_fiche[0].text_area("Inventaire",value=data_ext[1],height=300)
 PO=text_fiche[1].number_input("PO",value=int(data_ext[2].split("##")[0]))
 PA=text_fiche[1].number_input("PA",value=int(data_ext[2].split("##")[1]))
 
+# ---------------------- Aptitudes
 apt=b.expander("Aptitudes")
+if st.session_state['atout']:
+    st.session_state['nbatouts']=apt.slider("Nombre d'atouts",min_value=0,value=st.session_state['nbatouts'],on_change=nbatout_sl,max_value=calc_cpt_nb-st.session_state['counter']-1,key="nbatoutsslider")
+    for i in range(st.session_state['nbatouts']):
+        apt.text_input("Atout "+str(i+1),key="atout"+str(i))
 
 Aptitudes=apt.text_area("Aptitudes",value=data_ext[3],height=600)
 
+# ---------------------- Sorts
 sor=b.expander("Sorts")
 
 Sorts=sor.text_area("Sorts",value=data_ext[4],height=500)
