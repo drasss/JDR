@@ -1,0 +1,32 @@
+Compétences |||
+- Armes à une main (dagues, épées courtes, cimeterres...)
+- Armes à deux mains (épées longues, haches de guerre...)
+- Mains nues
+- Armes de jet (couteaux de lancer, javelots, chakrams...)
+- Armes de tir
+- Armes magiques (baguettes ou bâtons par exemple)
+- Athlétisme (jouer des muscles, forcer une porte)
+- Connaissances (Médecine (diagnostiquer une anomalie, recoudre quelqu'un)/Arcanes (ce qui touche à la magie)/Histoire et Civilisations (les cultures étrangères et leurs langues)/Mythes et Croyances (folklore, religions)/Mécanique (serrurerie, pièges)/Géologie (estimation de la valeur ou des propriétés d'un caillou, s'orienter sous terre)/Nature (savoir ce qui est comestible, à quel animal appartiennent ces empreintes, s'orienter en extérieur/Monstres (identifier à quelle espèce de monstre tu as affaire, ses forces, ses points faibles))
+- Psychologie (savoir si quelqu'un ment ou comment ce quelqu'un se comporte(ra))
+- Baratin (noyer le poisson, mentir)
+- Diplomatie (éviter le combat)
+- Subterfuges (faire les poches, se cacher, ouvrir discrètement une serrure)
+- Investigation (faire des déductions logiques, fouiller un lieu, rester sur ses gardes)
+--- Aptitudes |||
+- Esprit réactif : tu utilises l'ESP au lieu de la CEL ou de la LUC pour le calcul de l'esquive (2PE) (Psycho 3)
+
+- Sorts supérieurs : tu gagnes l'accès à des sorts plus puissants (C. Arcanes 3, Contrôle au choix 3)
+
+- Maîtrise : +5% crit et +2 dégâts avec type d'armes choisi (comp martiale 3) ; +5% crit et +2 dégâts/niveau suivant de comp martiale
+
+- Défense armée : ajout de ton niveau d'Arme de mêlée (1 ou 2 mains) à la PRD (Armes 1 ou 2 mains 3) (1PE)
+
+- Vivacité : ajoute Athlétisme ou Subterfuges à ton initiative (Athlé/Subt 3)
+
+- Second souffle : si tes PV tombent à 0 ou moins, tu en récup 10 + la dizaine de ta CON ; ces PV durent 3 tours, puis [tu perds le même montant de PV / tu perds ces PV-4 / tu peux dépenser des PE si tu n'as pas assez de PV pour encaisser (selon niveau, voir en fin)], même si ces PV temporaires sont épuisés (ce qui peut du coup te tuer) ; à moins que tu n'aies reçu des soins avant la fin de l'effet, tu tombes K.O. (Athlé 3/4/5)
+
+- Agilité martiale : tu gagnes une esquive/tour / ça peut aussi être une parade / tu gagnes une nouvelle manoeuvre défensive par tour (parade ou esquive) / l'effet devient passif (Athlé 3/4/5/6) (1 PE)
+
+- Attaques vicieuses : tes attaques sournoises infligent +2 / les armes à 1 main peuvent porter des attaques sournoises / +4 dégâts, les armes à distance aussi / contre 2PE, n'importe quelle attaque que tu portes est sournoise (Subterfuges 3/4/5/6)
+
+- Elixirologue : lors création d'une potion de PV/PE, son efficacité augmente au moins de moitié (en gros, tu lances un dé de catégorie inférieure à celui de la potion créée et tu le rajoutes, avec pour minimum la moitié de la valeur du dé de base de la potion ; exemple, pour créer une potion à 1d6 avec ça, tu lances 1d4 : si tu fais 1, 2 ou 3, ta potion fait 1d6+3, si tu fais 4 elle passe à +4) (Artisanat apothicaire 4) (2PE non-récupérables tant que la potion n'est pas consommée)- 

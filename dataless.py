@@ -4,7 +4,7 @@ import random
 from io import StringIO
 
 st.set_page_config(layout="wide")
-b,d,p = st.tabs(["Fiche Personnage","Simulation","Equilibrage"])
+b,infos,d,p = st.tabs(["Fiche Personnage","informations","Simulation","Equilibrage"])
 
 #lancé de dés
 lance=st.sidebar
@@ -304,6 +304,25 @@ p.text("tu t'amuseras + dans "+ptitles[np.argmax(score)])
 p.text("tu t'amuseras - dans "+ptitles[np.argmin(score)])
 p.text(" si un de ces scores est en dessous de 2, attention ! ")
 p.text(str([ptitles[i]+" : "+str(round(score[i],2)) for i in range(len(score))]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##-------------------------------- Informations
+import lore.loring as loring
+
+
+loring.d_lore(infos)
 
 
 
