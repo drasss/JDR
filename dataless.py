@@ -338,6 +338,10 @@ from googleapiclient.discovery import build
 
 st.set_page_config(layout="wide")
 
+vals=dispo.expander("Variables")
+
+st.session_state["proba_O"]=vals.slider("Probabilité d'être disponible quand quelqu'un met \"O\"",0,100,80)/100
+
 def pull_sheet_data(SCOPES,SPREADSHEET_ID,ranging,creds):
     service = build('sheets', 'v4', credentials=creds)
     sheet = service.spreadsheets()
@@ -375,7 +379,7 @@ def get_data():
         data_np+=[pd.DataFrame(data[naming[i]]).fillna(value="").to_numpy()[2:7,1:]]
         #dispo.write(data_np[-1])
     data_np=np.array(data_np)
-    score_val=[1,0.8,0]
+    score_val=[1,st.session_state['proba_O'],0]
 
 
 
