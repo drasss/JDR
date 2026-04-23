@@ -438,7 +438,7 @@ st.session_state["creno"],tempo=order(np.array(st.session_state["score_rec"]))
 hour=["14h-16h","16h-18h","18h-20h","20h-22h","22h-24h"]
 cont=[]
 cols=[]
-for i in range(st.session_state["jours_dispo"]):
+for i in range(min(st.session_state["jours_dispo"],len(st.session_state["creno"]))):
     cont+=[dispo.container(border=1)]
     info=st.session_state["creno"][i]
     #DATE
