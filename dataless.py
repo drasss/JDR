@@ -4,7 +4,7 @@ import random
 from io import StringIO
 
 st.set_page_config(layout="wide")
-b,infos,d,p = st.tabs(["Fiche Personnage","informations","Simulation","Equilibrage"])
+b,infos,d,p,dispo = st.tabs(["Fiche Personnage","informations","Simulation","Equilibrage","Disponibilités"])
 
 #lancé de dés
 lance=st.sidebar
@@ -325,19 +325,130 @@ import lore.loring as loring
 loring.d_lore(infos)
 
 
+## -------------------------------- Disponibilités
+
+
+import base64
+import pickle
+from googleapiclient.discovery import build
+import pandas as pd
+
+import datetime
+from googleapiclient.discovery import build 
+
+st.set_page_config(layout="wide")
+
+def pull_sheet_data(SCOPES,SPREADSHEET_ID,ranging,creds):
+    service = build('sheets', 'v4', credentials=creds)
+    sheet = service.spreadsheets()
+    sheets = service.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()
+    value={}
+    naming=[]
+    for sheetl in sheets["sheets"]:
+        name = sheetl["properties"]["title"]
+        naming+=[name]
+        result = service.spreadsheets().values().get(
+            spreadsheetId=SPREADSHEET_ID,
+            range=f"{name}"
+        ).execute()
+        value[name]=[result.get("values", [])][0]
+
+    if not value:
+        pass
+    else:
+        data = value
+        return data,naming
+    
+
+def get_data():
+
+    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+    decoded = base64.b64decode(st.secrets.pickle)
+    creds = pickle.loads(decoded)
+    SPREADSHEET_IDs = st.secrets.spreadsheet_id
+    # A REFLECHIR pour ne pull que le résultat de la derniere Gsheet, bien que parfois défaillante
+    data,naming=pull_sheet_data(SCOPES,SPREADSHEET_IDs,"A1:DI7",creds)
+    data_np=[]
+    dates=pd.DataFrame(data[naming[1]]).to_numpy()[1,1:]
+    for i in range(1,len(naming)):
+        #dispo.write(naming[i])
+        data_np+=[pd.DataFrame(data[naming[i]]).fillna(value="").to_numpy()[2:7,1:]]
+        #dispo.write(data_np[-1])
+    data_np=np.array(data_np)
+    score_val=[1,0.8,0]
 
 
 
+    score=np.sum((data_np[:-3]=="X")*score_val[0]+(data_np[:-3]=="O")*score_val[1],axis=0)-100*(data_np[-2]=="")+(data_np[-2]=="X")*score_val[0]+(data_np[-2]=="O")*score_val[1]
+    return score,dates,data_np[-1]
 
 
 
+# la strat : parcourir manuellement tout le tableau "score", regroupper les créneaux connexes et se demerder pour tout trier petit a petit ? (quelle galère)
+## une recursion qui demande le max, le stocke dans un vecteur, si jamais au même score a coté y'a une valeur connexe (voir a traiter avec la transposée et voir comment le max se fait) on les regroupe
+## une fois fait on supprime de la matrice la valeur (on la remplace par un null) et on reccomence jusqu'a ce que le max soit un null (ou autre)
+if "score" not in st.session_state:
+    with st.spinner("Récupération des données", show_time=True):
+        st.session_state["score"],st.session_state["dates"],st.session_state["data_np"]=get_data()
+if "show" not in st.session_state:
+    st.session_state["show"]=False
+if "creno" not in st.session_state:
+    st.session_state["creno"]=[""]*111
+if "score_rec" not in st.session_state or np.nan in st.session_state["score_rec"]:
+    st.session_state["score_rec"]=np.transpose(st.session_state["score"])
+
+affichage_dispo=dispo.columns([5,3])
+st.session_state["jours_dispo"]=affichage_dispo[0].number_input("Nombre de créneaux à afficher", value=5)
+st.session_state["check_today"]=affichage_dispo[1].checkbox("Ne chercher les dates qu'apres aujourd'hui",value=True)
+    
+
+def order(score_rec):
+    creno=[]
+    while np.count_nonzero(~np.isnan(score_rec))!=0:
+        k=int(np.nanargmax(score_rec))
+        i,j=k//5,k%5
+        s=score_rec[i,j]
+        r=[[i,j]]
+        score_rec[i,j]=np.nan # pre
+        # TEST
+
+        while j<4 and s==score_rec[i,j+1]:
+            j+=1
+
+            r+=[[i,j]]
+            score_rec[i,j]=np.nan
+        creno+=[r]
+    return creno,score_rec
+
+if st.session_state["check_today"]:
+    today=datetime.date.today().strftime('%d/%m/%Y')
+    if today in st.session_state["dates"]:
+        index_today=np.where(st.session_state["dates"]==today)[0][0]
+        s_r=np.transpose(st.session_state["score"][:,index_today:])
+        st.session_state["score_rec"]=np.array(s_r)
+    else: st.write("MEH je suis en retard moi la")
+else :
+    today=st.session_state["dates"][0]
+    index_today=0
+    st.session_state["score_rec"]=np.transpose(st.session_state["score"]) #essentiel
+
+st.session_state["creno"],tempo=order(np.array(st.session_state["score_rec"]))
 
 
-
-
-
-
-
-
+hour=["14h-16h","16h-18h","18h-20h","20h-22h","22h-24h"]
+cont=[]
+cols=[]
+for i in range(st.session_state["jours_dispo"]):
+    cont+=[st.container(border=1)]
+    info=st.session_state["creno"][i]
+    #DATE
+    date_index=info[0][0]
+    cols+=[cont[-1].columns([1,1,1])]
+    cols[-1][0].write(st.session_state["dates"][index_today:][date_index])
+    # HEURE
+    heure=hour[info[0][-1]].split("-")[0]+" - "+hour[info[-1][-1]].split("-")[-1]
+    cols[-1][1].write(heure)
+    #DISPO
+    cols[-1][-1].write(st.session_state["data_np"][:,index_today:][info[0][1]][info[0][0]])  # je doute de l'éfficacité de la méthode 
 
 
