@@ -439,7 +439,7 @@ hour=["14h-16h","16h-18h","18h-20h","20h-22h","22h-24h"]
 cont=[]
 cols=[]
 for i in range(st.session_state["jours_dispo"]):
-    cont+=[st.container(border=1)]
+    cont+=[dispo.container(border=1)]
     info=st.session_state["creno"][i]
     #DATE
     date_index=info[0][0]
