@@ -112,8 +112,6 @@ def calc_cpt(stat_nb,human=True):
     return cpt
 
 # ---------------------- Compétences et atout
-
-
 # ----- import 
 if 'atout' not in st.session_state:
     st.session_state['atout']=False
@@ -276,8 +274,6 @@ if calcul_b:
 d.text(simur)
 
 
-
-
 #---------------------------------- 
 #---------------------------------- équilibrage du fun de la partie
 #---------------------------------- p
@@ -306,18 +302,6 @@ p.text(" si un de ces scores est en dessous de 2, attention ! ")
 p.text(str([ptitles[i]+" : "+str(round(score[i],2)) for i in range(len(score))]))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 ##-------------------------------- Informations
 import lore.loring as loring
 
@@ -326,7 +310,6 @@ loring.d_lore(infos)
 
 
 ## -------------------------------- Disponibilités
-
 
 import base64
 import pickle
@@ -363,7 +346,6 @@ def pull_sheet_data(SCOPES,SPREADSHEET_ID,ranging,creds):
         data = value
         return data,naming
     
-
 def get_data():
 
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -381,8 +363,6 @@ def get_data():
     data_np=np.array(data_np)
     return data_np,dates
 
-
-
 # la strat : parcourir manuellement tout le tableau "score", regroupper les créneaux connexes et se demerder pour tout trier petit a petit ? (quelle galère)
 ## une recursion qui demande le max, le stocke dans un vecteur, si jamais au même score a coté y'a une valeur connexe (voir a traiter avec la transposée et voir comment le max se fait) on les regroupe
 ## une fois fait on supprime de la matrice la valeur (on la remplace par un null) et on reccomence jusqu'a ce que le max soit un null (ou autre)
@@ -391,7 +371,6 @@ if "data_np_all" not in st.session_state:
         st.session_state["data_np_all"],st.session_state["dates"]=get_data()
         dnall=np.array(st.session_state["data_np_all"])
         st.session_state["data_np"]=dnall[-1]
-
 
 score_val=[1,st.session_state["proba_O"],0]
 st.session_state["score"]=np.sum(np.array(st.session_state["data_np_all"][:-3]=="X",dtype=float)*score_val[0]+np.array(st.session_state["data_np_all"][:-3]=="O",dtype=float)*score_val[1],axis=0)-100*np.array(st.session_state["data_np_all"][-2]=="",dtype=float)+np.array(st.session_state["data_np_all"][-2]=="X",dtype=float)*score_val[0]+np.array(st.session_state["data_np_all"][-2]=="O",dtype=float)*score_val[1]
@@ -407,7 +386,6 @@ affichage_dispo=dispo.columns([5,3])
 st.session_state["jours_dispo"]=affichage_dispo[0].number_input("Nombre de créneaux à afficher", value=5)
 st.session_state["check_today"]=affichage_dispo[1].checkbox("Ne chercher les dates qu'apres aujourd'hui",value=True)
     
-
 def order(score_rec):
     creno=[]
     while np.count_nonzero(~np.isnan(score_rec))!=0:
@@ -439,7 +417,6 @@ else :
     st.session_state["score_rec"]=np.transpose(st.session_state["score"]) #essentiel
 
 st.session_state["creno"],tempo=order(np.array(st.session_state["score_rec"]))
-
 
 hour=["14h-16h","16h-18h","18h-20h","20h-22h","22h-24h"]
 cont=[]
