@@ -379,21 +379,23 @@ def get_data():
         data_np+=[pd.DataFrame(data[naming[i]]).fillna(value="").to_numpy()[2:7,1:]]
         #dispo.write(data_np[-1])
     data_np=np.array(data_np)
-    score_val=[1,st.session_state['proba_O'],0]
-
-
-
-    score=np.sum((data_np[:-3]=="X")*score_val[0]+(data_np[:-3]=="O")*score_val[1],axis=0)-100*(data_np[-2]=="")+(data_np[-2]=="X")*score_val[0]+(data_np[-2]=="O")*score_val[1]
-    return score,dates,data_np[-1]
+    return data_np,dates
 
 
 
 # la strat : parcourir manuellement tout le tableau "score", regroupper les créneaux connexes et se demerder pour tout trier petit a petit ? (quelle galère)
 ## une recursion qui demande le max, le stocke dans un vecteur, si jamais au même score a coté y'a une valeur connexe (voir a traiter avec la transposée et voir comment le max se fait) on les regroupe
 ## une fois fait on supprime de la matrice la valeur (on la remplace par un null) et on reccomence jusqu'a ce que le max soit un null (ou autre)
-if "score" not in st.session_state:
+if "data_np_all" not in st.session_state:
     with st.spinner("Récupération des données", show_time=True):
-        st.session_state["score"],st.session_state["dates"],st.session_state["data_np"]=get_data()
+        st.session_state["data_np_all"],st.session_state["dates"]=get_data()
+        dnall=np.array(st.session_state["data_np_all"])
+        st.session_state["data_np"]=dnall[-1]
+
+
+score_val=[1,st.session_state["proba_O"],0]
+st.session_state["score"]=np.sum(np.array(st.session_state["data_np_all"][:-3]=="X",dtype=float)*score_val[0]+np.array(st.session_state["data_np_all"][:-3]=="O",dtype=float)*score_val[1],axis=0)-100*np.array(st.session_state["data_np_all"][-2]=="",dtype=float)+np.array(st.session_state["data_np_all"][-2]=="X",dtype=float)*score_val[0]+np.array(st.session_state["data_np_all"][-2]=="O",dtype=float)*score_val[1]
+
 if "show" not in st.session_state:
     st.session_state["show"]=False
 if "creno" not in st.session_state:
